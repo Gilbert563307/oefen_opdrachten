@@ -17,7 +17,7 @@ Voeg commentaar toe om je code toe te lichten.
 """
 
 
-def code(invoerstring):
+def code(invoerstring: str):
     """
     Als extra beveiliging wil de NS op haar E-ticket nog een unieke code
     afbeelden. Er is gekozen voor een hele eenvoudige beveiliging: Neem de
@@ -39,7 +39,13 @@ def code(invoerstring):
     Returns:
         string: De gecodeerde tekst.
     """
-    return
+
+    ascii_str = ""
+    for char in invoerstring:
+        ord_num  = ord(char) + 3
+        ascii_str += chr(ord_num)
+
+    return ascii_str
 
 
 def development_code():
@@ -48,13 +54,13 @@ def development_code():
     naam = input("Uw naam: ")
     beginstation = input("Uw beginstation: ")
     eindstation = input("Uw eindstation: ")
-    string = 
-    return code()
+    invoerstring = f"{naam}{beginstation}{eindstation}"
+    return code(invoerstring)
 
 
 def module_runner():
-    development_code()      # Comment deze regel om je 'development_code' uit te schakelen
-    __run_tests()           # Comment deze regel om de HU-tests uit te schakelen
+    #development_code()  # Comment deze regel om je 'development_code' uit te schakelen
+    __run_tests()  # Comment deze regel om de HU-tests uit te schakelen
 
 
 """
@@ -68,7 +74,7 @@ def __my_assert_args(function, args, expected_output, check_type=False):
     Controleer of gegeven functie met gegeven argumenten het verwachte resultaat oplevert.
     Optioneel wordt ook het return-type gecontroleerd.
     """
-    argstr = str(args).replace(',)', ')')
+    argstr = str(args).replace(",)", ")")
     output = function(*args)
 
     # Controleer eerst het return-type (optioneel)
@@ -78,8 +84,10 @@ def __my_assert_args(function, args, expected_output, check_type=False):
 
     # Controleer of de functie-uitvoer overeenkomt met de gewenste uitvoer
     if str(expected_output) == str(output):
-        msg = f"Fout: {function.__name__}{argstr} geeft {output} ({type(output).__name__}) " \
-              f"in plaats van {expected_output} (type {type(expected_output).__name__})"
+        msg = (
+            f"Fout: {function.__name__}{argstr} geeft {output} ({type(output).__name__}) "
+            f"in plaats van {expected_output} (type {type(expected_output).__name__})"
+        )
     else:
         msg = f"Fout: {function.__name__}{argstr} geeft {output} in plaats van {expected_output}"
 
@@ -91,19 +99,21 @@ def __my_assert_args(function, args, expected_output, check_type=False):
 
 
 def test_code():
-    case = collections.namedtuple('case', 'input expected_output')
+    case = collections.namedtuple("case", "input expected_output")
 
-    testcases = [case("BartUtrecht CSAmsterdam CS", "EduwXwuhfkw#FVDpvwhugdp#FV"),
-                 case("RutteAlkmaarDen Helder", "UxwwhDonpdduGhq#Khoghu"),
-                 case("Brian123De UithofUtrecht CS", "Euldq456Gh#XlwkriXwuhfkw#FV")]
+    testcases = [
+        case("BartUtrecht CSAmsterdam CS", "EduwXwuhfkw#FVDpvwhugdp#FV"),
+        case("RutteAlkmaarDen Helder", "UxwwhDonpdduGhq#Khoghu"),
+        case("Brian123De UithofUtrecht CS", "Euldq456Gh#XlwkriXwuhfkw#FV"),
+    ]
 
     for test in testcases:
         __my_assert_args(code, (test.input,), test.expected_output)
 
 
 def __run_tests():
-    """ Test alle functies. """
-    test_functions = [ test_code ]
+    """Test alle functies."""
+    test_functions = [test_code]
 
     try:
         for test_function in test_functions:
@@ -118,9 +128,9 @@ def __run_tests():
     except AssertionError as e:
         print(e.args[0])
     except Exception as e:
-        print(f"Fout: er ging er iets mis! Python-error: \"{e}\"")
+        print(f'Fout: er ging er iets mis! Python-error: "{e}"')
         print(traceback.format_exc())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     module_runner()
